@@ -1,8 +1,8 @@
 name: youtube_quality_player
 description: A Flutter YouTube player package that supports multiple video qualities, multi speeds, and more.
 version: 0.0.1
-author: mayar aboumahmood <abmayar208@gmail.com>//is this the right way?
-homepage: //what is the homepage what should I add???
+author: mayar aboumahmood <abmayar208@gmail.com>
+homepage: https://github.com/MayarAboumahmood/youtube_quality_player.git
 
 environment:
   sdk: ^3.5.0
@@ -16,6 +16,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  youtube_explode_dart: ^2.3.1
+  media_kit_video: ^1.2.5
+  media_kit: ^1.1.11
+  media_kit_libs_video: ^1.0.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
