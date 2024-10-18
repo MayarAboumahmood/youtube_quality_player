@@ -7,8 +7,9 @@ import 'package:media_kit/media_kit.dart' as mediKit;
 import 'package:media_kit_video/media_kit_video.dart' as mediKitVideo;
 import 'package:youtube_quality_player/video_settings_bottomsheet.dart';
 
-class YQPlayer extends StatefulWidget {
+import 'fullscreen_functions.dart';
 
+class YQPlayer extends StatefulWidget {
   /// The YouTube video link to be played.
   ///
   /// This is a required parameter that specifies the URL of the YouTube video.
@@ -59,7 +60,7 @@ class _YQPlayerState extends State<YQPlayer> {
   late String videoLink;
   YoutubeExplode youtubeExplode = YoutubeExplode();
   bool fetchingVideoQualitiesLoading = true;
-  late List<AudioOnlyStreamInfo> audioOnlyStreamInfo=[];
+  late List<AudioOnlyStreamInfo> audioOnlyStreamInfo = [];
 
   List<mediKit.VideoTrack> videosUrl = [];
 
@@ -173,50 +174,74 @@ class _YQPlayerState extends State<YQPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: fetchingVideoQualitiesLoading
-          ?const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : mediKitVideo.MaterialVideoControlsTheme(
-              normal: mediKitVideo.MaterialVideoControlsThemeData(
-                padding:const EdgeInsets.symmetric(vertical: 10),
-                // seekBarBufferColor: Colors.green,
-                seekBarPositionColor: widget.secondaryColor!,
-                seekBarThumbColor: widget.primaryColor!,
-                // Modify theme options:
-                buttonBarButtonSize: 24.0,
-                buttonBarButtonColor: Colors.white,
-                // Modify top button bar:
-                topButtonBar: [
-                  const Spacer(),
-                  mediKitVideo.MaterialDesktopCustomButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return SettingsSheet(
-                            videoQualities: videoQualities,
-                            currentSpeed: currentSpeed,
-                            onChangeQuality: changeVideoQuality,
-                            primaryColor: widget.primaryColor!,
-                            onChangeSpeed: (speed) {
-                              setState(() {
-                                currentSpeed = speed;
-                              });
-                            },
-                          );
-                        },
-                      );
-                    },
-                    icon: const Icon(Icons.settings),
-                  ),
-                ],
-              ),
-              fullscreen: const mediKitVideo.MaterialVideoControlsThemeData(
-                // Modify theme options:
-                displaySeekBar: false,
-                automaticallyImplySkipNextButton: false,
-                automaticallyImplySkipPreviousButton: false,
-              ),
+              normal: buildMaterialVideoControlsNormalThemeData(context),
+              fullscreen: buildMaterialVideoControlsFullScreenThemeData(),
               child: mediKitVideo.Video(
                   controller: videoController, fit: BoxFit.contain)),
+    );
+  }
+
+  mediKitVideo.MaterialVideoControlsThemeData
+      buildMaterialVideoControlsFullScreenThemeData() {
+    return const mediKitVideo.MaterialVideoControlsThemeData(
+      // Modify theme options:
+      displaySeekBar: false,
+      automaticallyImplySkipNextButton: false,
+      automaticallyImplySkipPreviousButton: false,
+    );
+  }
+
+  mediKitVideo.MaterialVideoControlsThemeData
+      buildMaterialVideoControlsNormalThemeData(BuildContext context) {
+    return mediKitVideo.MaterialVideoControlsThemeData(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      // seekBarBufferColor: Colors.green,
+      seekBarPositionColor: widget.secondaryColor!,
+      seekBarThumbColor: widget.primaryColor!,
+      // Modify theme options:
+      buttonBarButtonSize: 24.0,
+      buttonBarButtonColor: Colors.white,
+      primaryButtonBar: [
+        mediKitVideo.MaterialPlayOrPauseButton(iconSize: 48.0),
+      ],
+      bottomButtonBar: [
+        IconButton(
+          onPressed: () => customToggleFullscreen(context, videoController,
+              widget.primaryColor!, widget.secondaryColor!),
+          icon: (mediKitVideo.isFullscreen(context)
+              ? const Icon(Icons.fullscreen_exit)
+              : const Icon(Icons.fullscreen)),
+          iconSize: 24,
+          color: Colors.white,
+        )
+      ],
+
+      topButtonBar: [
+        const Spacer(),
+        mediKitVideo.MaterialDesktopCustomButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return SettingsSheet(
+                  videoQualities: videoQualities,
+                  currentSpeed: currentSpeed,
+                  onChangeQuality: changeVideoQuality,
+                  primaryColor: widget.primaryColor!,
+                  onChangeSpeed: (speed) {
+                    setState(() {
+                      currentSpeed = speed;
+                    });
+                  },
+                );
+              },
+            );
+          },
+          icon: const Icon(Icons.settings),
+        ),
+      ],
     );
   }
 }
