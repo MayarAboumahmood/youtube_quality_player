@@ -190,7 +190,7 @@ class _YQPlayerState extends State<YQPlayer> {
           ? Container(
           color: Colors.black,
           width:MediaQuery.of(context).size.width ,
-          height: MediaQuery.of(context).size.width*.9/16,
+          height: MediaQuery.of(context).size.width*9/16,
           child: const Center(child: CircularProgressIndicator(color: Colors.white,)))
           : mediKitVideo.MaterialVideoControlsTheme(
               normal: buildMaterialVideoControlsNormalThemeData(context),
