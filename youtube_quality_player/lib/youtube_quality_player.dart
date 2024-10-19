@@ -53,6 +53,13 @@ class _YQPlayerState extends State<YQPlayer> {
     }
   }
 
+  @override
+  void dispose() {
+    videoPlayer.stop();
+    videoPlayer.dispose();
+    super.dispose();
+  }
+
   late List<VideoStreamInfo> videoQualities = [];
   double currentSpeed = 1.0;
   VideoStreamInfo? selectedQuality;
@@ -234,7 +241,9 @@ class _YQPlayerState extends State<YQPlayer> {
                 return SettingsSheet(
                   videoQualities: videoQualities,
                   currentSpeed: currentSpeed,
-                  onChangeQuality: changeVideoQuality,
+                  onChangeQuality: (newSelected) {
+                    changeVideoQuality(newSelected);
+                  },
                   primaryColor: widget.primaryColor!,
                   onChangeSpeed: (speed) {
                     setState(() {
