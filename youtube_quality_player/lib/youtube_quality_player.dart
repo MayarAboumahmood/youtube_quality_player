@@ -187,7 +187,11 @@ class _YQPlayerState extends State<YQPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: fetchingVideoQualitiesLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Container(
+          color: Colors.black,
+          width:MediaQuery.of(context).size.width ,
+          height: MediaQuery.of(context).size.width*.9/16,
+          child: const Center(child: CircularProgressIndicator(color: Colors.white,)))
           : mediKitVideo.MaterialVideoControlsTheme(
               normal: buildMaterialVideoControlsNormalThemeData(context),
               fullscreen: buildMaterialVideoControlsFullScreenThemeData(),
@@ -244,6 +248,7 @@ class _YQPlayerState extends State<YQPlayer> {
                   onChangeQuality: (newSelected) {
                     changeVideoQuality(newSelected);
                   },
+                  selectedQuality: selectedQuality,
                   primaryColor: widget.primaryColor!,
                   onChangeSpeed: (speed) {
                     setState(() {
