@@ -186,9 +186,9 @@ class _FullscreenVideoPlayerState extends State<FullscreenVideoPlayer> {
   void _updateShowDirectionControls() {
     // Check the current scale and update the lessonVideoController's showDirectionControls
     final currentScale = transformationController.value.getMaxScaleOnAxis();
-    setState() {
+    setState(() {
       showDirectionControls = currentScale > 1.0;
-    }
+    });
   }
 
   // Method to exit fullscreen and rotate the device back to portrait mode

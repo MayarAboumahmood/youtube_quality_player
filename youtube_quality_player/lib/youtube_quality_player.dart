@@ -79,7 +79,9 @@ class _YQPlayerState extends State<YQPlayer> {
       if (manifest.videoOnly.isNotEmpty && manifest.audioOnly.isNotEmpty) {
         audioOnlyStreamInfo = manifest.audioOnly;
         assignVideoQualities(manifest.videoOnly);
-        selectedQuality = videoQualities[(videoQualities.length ~/ 2)];
+        setState(() {
+          selectedQuality = videoQualities[(videoQualities.length ~/ 2)];
+        });
         initialiseVideoPlayer();
       }
       videoController = mediKitVideo.VideoController(videoPlayer);
@@ -118,6 +120,7 @@ class _YQPlayerState extends State<YQPlayer> {
       await videoPlayer
           .open(mediKit.Media(selectedQuality!.url.toString()))
           .then((_) async {
+        await Future.delayed(const Duration(milliseconds: 500));
         videoPlayer.setAudioTrack(
             mediKit.AudioTrack.uri(getClosestAudioStream()!.url.toString()));
       });
@@ -125,7 +128,10 @@ class _YQPlayerState extends State<YQPlayer> {
   }
 
   void changeVideoQuality(VideoStreamInfo newQuality) async {
-    selectedQuality = newQuality;
+    setState(() {
+      selectedQuality = newQuality;
+    });
+
     AudioOnlyStreamInfo? newAudio = getClosestAudioStream();
     Duration? cPosition = await videoPlayer.stream.position.first;
     await videoPlayer
