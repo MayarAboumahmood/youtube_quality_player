@@ -19,19 +19,20 @@ class YQPlayer extends StatefulWidget {
   ///
   /// This color will be used for primary UI elements. If not specified, a default
   /// color will be applied.
-  Color? primaryColor;
+  final Color? primaryColor;
 
   /// The secondary color used as the secondary theme color.
   ///
   /// This color will be used for secondary UI elements. If not specified, a default
   /// color will be applied.
-  Color? secondaryColor;
+  final Color? secondaryColor;
 
-  YQPlayer(
-      {super.key,
-      required this.videoLink,
-      this.primaryColor,
-      this.secondaryColor});
+  YQPlayer({
+    super.key,
+    required this.videoLink,
+    this.primaryColor = Colors.green,
+    this.secondaryColor = Colors.greenAccent,
+  });
 
   @override
   _YQPlayerState createState() => _YQPlayerState();
@@ -44,13 +45,6 @@ class _YQPlayerState extends State<YQPlayer> {
     videoLink = widget.videoLink; // example video
     videoId = VideoId(videoLink);
     fetchVideoQualities();
-
-    if (widget.primaryColor == null) {
-      widget.primaryColor = Colors.green;
-    }
-    if (widget.secondaryColor == null) {
-      widget.secondaryColor = Colors.greenAccent;
-    }
   }
 
   @override
@@ -188,10 +182,13 @@ class _YQPlayerState extends State<YQPlayer> {
     return Scaffold(
       body: fetchingVideoQualitiesLoading
           ? Container(
-          color: Colors.black,
-          width:MediaQuery.of(context).size.width ,
-          height: MediaQuery.of(context).size.width*9/16,
-          child: const Center(child: CircularProgressIndicator(color: Colors.white,)))
+              color: Colors.black,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width * 9 / 16,
+              child: const Center(
+                  child: CircularProgressIndicator(
+                color: Colors.white,
+              )))
           : mediKitVideo.MaterialVideoControlsTheme(
               normal: buildMaterialVideoControlsNormalThemeData(context),
               fullscreen: buildMaterialVideoControlsFullScreenThemeData(),

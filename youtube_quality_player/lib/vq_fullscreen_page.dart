@@ -4,8 +4,8 @@ import 'package:media_kit_video/media_kit_video.dart';
 
 class FullscreenVideoPlayer extends StatefulWidget {
   final VideoController videoController;
-  Color primaryColor;
-  Color secondaryColor;
+  final Color primaryColor;
+  final Color secondaryColor;
 
   FullscreenVideoPlayer(
       {required this.videoController,

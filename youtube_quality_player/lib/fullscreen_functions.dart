@@ -34,7 +34,7 @@ void _enterFullscreen(BuildContext context, VideoController videoController,
         secondaryColor: secondaryColor,
       ),
     ),
-  )!
+  )
       .then((_) async {
     await Future.delayed(const Duration(milliseconds: 500));
     SystemChrome.setPreferredOrientations([
