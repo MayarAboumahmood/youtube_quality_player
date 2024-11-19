@@ -122,7 +122,7 @@ class _YQPlayerState extends State<YQPlayer> {
           .open(mediKit.Media(selectedQuality!.url.toString()))
           .then((_) async {
         await Future.delayed(const Duration(milliseconds: 500));
-        videoPlayer.setAudioTrack(
+        videoPlayer.  setAudioTrack(
             mediKit.AudioTrack.uri(getClosestAudioStream()!.url.toString()));
       });
     }
@@ -250,6 +250,7 @@ class _YQPlayerState extends State<YQPlayer> {
                   onChangeSpeed: (speed) {
                     setState(() {
                       currentSpeed = speed;
+                      videoPlayer.setRate(currentSpeed);
                     });
                   },
                 );

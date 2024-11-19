@@ -1,39 +1,37 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# youtube_quality_player
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+`youtube_quality_player` is a Flutter widget that enables easy YouTube video playback with adjustable quality settings. This package is ideal for applications that require YouTube video integration with enhanced user control over video quality and fullscreen options.
 
 ## Features
+- Play YouTube videos directly within your Flutter app.
+- Choose video quality settings to optimize playback experience.
+- Fullscreen mode and customizable primary and secondary colors for a seamless UI.
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+## Getting Started
 
-## Getting started
+To start using `youtube_quality_player`, ensure you have a Flutter environment set up. Then, add `youtube_quality_player` as a dependency in your `pubspec.yaml` file:
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+```yaml
+dependencies:
+  youtube_quality_player: ^0.0.1
+
 
 ## Usage
+import 'package:flutter/material.dart';
+import 'package:youtube_quality_player/youtube_quality_player.dart';
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+void main() {
+  ensureYQPInitialized();
+  runApp(MyApp());
+}
 
-```dart
-const like = 'sample';
-```
+import 'package:youtube_quality_player/youtube_quality_player.dart';
+import 'package:flutter/material.dart';
 
-## Additional information
+YQPlayer(
+  videoLink: 'https://youtube.com/watch?v=example',
+  primaryColor: Colors.blue,
+  secondaryColor: Colors.redAccent,
+);
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+
