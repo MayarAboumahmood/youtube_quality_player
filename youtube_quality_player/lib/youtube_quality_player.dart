@@ -27,11 +27,18 @@ class YQPlayer extends StatefulWidget {
   /// color will be applied.
   final Color? secondaryColor;
 
+  /// The locale to be used for localization.
+  ///
+  /// Pass a `Locale` object (e.g., `Locale('en')` for English or `Locale('ar')` for Arabic).
+  /// If not specified, it defaults English.
+  final Locale locale;
+
   YQPlayer({
     super.key,
     required this.videoLink,
     this.primaryColor = Colors.green,
     this.secondaryColor = Colors.greenAccent,
+    this.locale = const Locale('en'), // Default to English
   });
 
   @override
@@ -122,7 +129,7 @@ class _YQPlayerState extends State<YQPlayer> {
           .open(mediKit.Media(selectedQuality!.url.toString()))
           .then((_) async {
         await Future.delayed(const Duration(milliseconds: 500));
-        videoPlayer.  setAudioTrack(
+        videoPlayer.setAudioTrack(
             mediKit.AudioTrack.uri(getClosestAudioStream()!.url.toString()));
       });
     }
@@ -240,6 +247,7 @@ class _YQPlayerState extends State<YQPlayer> {
               context: context,
               builder: (context) {
                 return SettingsSheet(
+                  locale: widget.locale,
                   videoQualities: videoQualities,
                   currentSpeed: currentSpeed,
                   onChangeQuality: (newSelected) {

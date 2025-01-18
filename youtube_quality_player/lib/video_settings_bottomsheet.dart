@@ -8,6 +8,7 @@ class SettingsSheet extends StatelessWidget {
   final double currentSpeed;
   final VideoStreamInfo? selectedQuality;
   final Color primaryColor;
+  final Locale locale;
 
   SettingsSheet({
     required this.videoQualities,
@@ -16,6 +17,7 @@ class SettingsSheet extends StatelessWidget {
     required this.currentSpeed,
     required this.primaryColor,
     this.selectedQuality,
+    required this.locale,
   });
 
   @override
@@ -31,11 +33,12 @@ class SettingsSheet extends StatelessWidget {
   }
 
   ListTile buildChangeSpeedListTile(BuildContext context) {
+    final text = locale.languageCode == 'ar' ? 'سرعة الفيديو' : 'Video Speed';
+
     return ListTile(
       trailing:
           Text('x$currentSpeed', style: Theme.of(context).textTheme.bodyMedium),
-      title:
-          Text('سرعة الفيديو', style: Theme.of(context).textTheme.bodyMedium),
+      title: Text(text, style: Theme.of(context).textTheme.bodyMedium),
       leading: Icon(Icons.speed_sharp,
           size: MediaQuery.of(context).size.width * .08),
       onTap: () {
@@ -54,13 +57,14 @@ class SettingsSheet extends StatelessWidget {
   }
 
   ListTile buildQualityChangeListTile(BuildContext context) {
+    final text = locale.languageCode == 'ar' ? 'جودة الفيديو' : 'Video Quality';
+
     return ListTile(
       trailing: Text('${selectedQuality?.videoResolution.height ?? ''}',
           style: Theme.of(context).textTheme.bodyMedium),
       leading: Icon(Icons.hd_outlined,
           size: MediaQuery.of(context).size.width * .08),
-      title:
-          Text('جودة الفيديو', style: Theme.of(context).textTheme.bodyMedium),
+      title: Text(text, style: Theme.of(context).textTheme.bodyMedium),
       onTap: () {
         Navigator.pop(context);
         showModalBottomSheet(
@@ -83,8 +87,10 @@ class QualitySelectionSheet extends StatelessWidget {
   final List<VideoStreamInfo> videoQualities;
   final Function(VideoStreamInfo) onChangeQuality;
   final VideoStreamInfo? selectedQuality;
-final Color primaryColor;
-  QualitySelectionSheet({
+  final Color primaryColor;
+
+  const QualitySelectionSheet({
+    super.key,
     required this.videoQualities,
     required this.onChangeQuality,
     this.selectedQuality,
