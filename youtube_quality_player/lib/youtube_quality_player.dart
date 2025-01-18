@@ -3,8 +3,8 @@ library youtube_quality_player;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'package:media_kit/media_kit.dart' as mediKit;
-import 'package:media_kit_video/media_kit_video.dart' as mediKitVideo;
+import 'package:media_kit/media_kit.dart' as media_kit;
+import 'package:media_kit_video/media_kit_video.dart' as media_kit_video;
 import 'package:youtube_quality_player/video_settings_bottomsheet.dart';
 
 import 'fullscreen_functions.dart';
@@ -33,7 +33,7 @@ class YQPlayer extends StatefulWidget {
   /// If not specified, it defaults English.
   final Locale locale;
 
-  YQPlayer({
+  const YQPlayer({
     super.key,
     required this.videoLink,
     this.primaryColor = Colors.green,
@@ -42,10 +42,10 @@ class YQPlayer extends StatefulWidget {
   });
 
   @override
-  _YQPlayerState createState() => _YQPlayerState();
+  YQPlayerState createState() => YQPlayerState();
 }
 
-class _YQPlayerState extends State<YQPlayer> {
+class YQPlayerState extends State<YQPlayer> {
   @override
   void initState() {
     super.initState();
@@ -70,11 +70,11 @@ class _YQPlayerState extends State<YQPlayer> {
   bool fetchingVideoQualitiesLoading = true;
   late List<AudioOnlyStreamInfo> audioOnlyStreamInfo = [];
 
-  List<mediKit.VideoTrack> videosUrl = [];
+  List<media_kit.VideoTrack> videosUrl = [];
 
-  late mediKit.Player videoPlayer = mediKit.Player();
+  late media_kit.Player videoPlayer = media_kit.Player();
 
-  late mediKitVideo.VideoController videoController;
+  late media_kit_video.VideoController videoController;
 
   Future<void> fetchVideoQualities() async {
     setState(() {
@@ -92,7 +92,7 @@ class _YQPlayerState extends State<YQPlayer> {
         });
         initialiseVideoPlayer();
       }
-      videoController = mediKitVideo.VideoController(videoPlayer);
+      videoController = media_kit_video.VideoController(videoPlayer);
 
       setState(() {
         fetchingVideoQualitiesLoading = false;
@@ -126,11 +126,11 @@ class _YQPlayerState extends State<YQPlayer> {
   void initialiseVideoPlayer() async {
     if (selectedQuality != null) {
       await videoPlayer
-          .open(mediKit.Media(selectedQuality!.url.toString()))
+          .open(media_kit.Media(selectedQuality!.url.toString()))
           .then((_) async {
         await Future.delayed(const Duration(milliseconds: 500));
         videoPlayer.setAudioTrack(
-            mediKit.AudioTrack.uri(getClosestAudioStream()!.url.toString()));
+            media_kit.AudioTrack.uri(getClosestAudioStream()!.url.toString()));
       });
     }
   }
@@ -143,17 +143,17 @@ class _YQPlayerState extends State<YQPlayer> {
     AudioOnlyStreamInfo? newAudio = getClosestAudioStream();
     Duration? cPosition = await videoPlayer.stream.position.first;
     await videoPlayer
-        .open(mediKit.Media(selectedQuality!.url.toString(), start: cPosition))
+        .open(media_kit.Media(selectedQuality!.url.toString(), start: cPosition))
         .then((_) async {
       await Future.delayed(const Duration(milliseconds: 500));
       if (newAudio != null) {
         await videoPlayer
-            .setAudioTrack(mediKit.AudioTrack.uri(newAudio.url.toString()));
+            .setAudioTrack(media_kit.AudioTrack.uri(newAudio.url.toString()));
       }
     });
 
     setState(() {
-      videoController = mediKitVideo.VideoController(videoPlayer);
+      videoController = media_kit_video.VideoController(videoPlayer);
     });
   }
 
@@ -196,17 +196,17 @@ class _YQPlayerState extends State<YQPlayer> {
                   child: CircularProgressIndicator(
                 color: Colors.white,
               )))
-          : mediKitVideo.MaterialVideoControlsTheme(
+          : media_kit_video.MaterialVideoControlsTheme(
               normal: buildMaterialVideoControlsNormalThemeData(context),
               fullscreen: buildMaterialVideoControlsFullScreenThemeData(),
-              child: mediKitVideo.Video(
+              child: media_kit_video.Video(
                   controller: videoController, fit: BoxFit.contain)),
     );
   }
 
-  mediKitVideo.MaterialVideoControlsThemeData
+  media_kit_video.MaterialVideoControlsThemeData
       buildMaterialVideoControlsFullScreenThemeData() {
-    return const mediKitVideo.MaterialVideoControlsThemeData(
+    return const media_kit_video.MaterialVideoControlsThemeData(
       // Modify theme options:
       displaySeekBar: false,
       automaticallyImplySkipNextButton: false,
@@ -214,9 +214,9 @@ class _YQPlayerState extends State<YQPlayer> {
     );
   }
 
-  mediKitVideo.MaterialVideoControlsThemeData
+  media_kit_video.MaterialVideoControlsThemeData
       buildMaterialVideoControlsNormalThemeData(BuildContext context) {
-    return mediKitVideo.MaterialVideoControlsThemeData(
+    return media_kit_video.MaterialVideoControlsThemeData(
       padding: const EdgeInsets.symmetric(vertical: 10),
       // seekBarBufferColor: Colors.green,
       seekBarPositionColor: widget.secondaryColor!,
@@ -225,13 +225,13 @@ class _YQPlayerState extends State<YQPlayer> {
       buttonBarButtonSize: 24.0,
       buttonBarButtonColor: Colors.white,
       primaryButtonBar: [
-        mediKitVideo.MaterialPlayOrPauseButton(iconSize: 48.0),
+        const media_kit_video.MaterialPlayOrPauseButton(iconSize: 48.0),
       ],
       bottomButtonBar: [
         IconButton(
           onPressed: () => customToggleFullscreen(context, videoController,
               widget.primaryColor!, widget.secondaryColor!),
-          icon: (mediKitVideo.isFullscreen(context)
+          icon: (media_kit_video.isFullscreen(context)
               ? const Icon(Icons.fullscreen_exit)
               : const Icon(Icons.fullscreen)),
           iconSize: 24,
@@ -241,7 +241,7 @@ class _YQPlayerState extends State<YQPlayer> {
 
       topButtonBar: [
         const Spacer(),
-        mediKitVideo.MaterialDesktopCustomButton(
+        media_kit_video.MaterialDesktopCustomButton(
           onPressed: () {
             showModalBottomSheet(
               context: context,
