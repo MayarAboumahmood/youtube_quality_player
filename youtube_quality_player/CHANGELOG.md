@@ -1,5 +1,4 @@
-## 0.0.2
+## 1.0.0
 
-* TODO: Describe initial release.
-
-Fixed a bug in the change play speed of the video.
+- Fixed localization support for `YQPlayer`.
+- Added `locale` parameter to `YQPlayer` for Arabic/English support.
