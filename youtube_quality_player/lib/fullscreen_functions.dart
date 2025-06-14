@@ -4,20 +4,22 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:youtube_quality_player/vq_fullscreen_page.dart';
 
 Future<void> customToggleFullscreen(
-    BuildContext context,
-    VideoController videoController,
-    Color primaryColor,
-    Color secondaryColor) async {
+  BuildContext context,
+  VideoController videoController,
+  Color primaryColor,
+  Color secondaryColor,
+  double playIconSize,
+) async {
   if (isFullscreen(context)) {
     return exitFullscreen(context);
   } else {
     return _enterFullscreen(
-        context, videoController, primaryColor, secondaryColor);
+        context, videoController, primaryColor, secondaryColor, playIconSize);
   }
 }
 
 void _enterFullscreen(BuildContext context, VideoController videoController,
-    Color primaryColor, Color secondaryColor) async {
+    Color primaryColor, Color secondaryColor, double playIconSize) async {
 // Set the device to landscape mode
 
   await SystemChrome.setPreferredOrientations([
@@ -32,6 +34,7 @@ void _enterFullscreen(BuildContext context, VideoController videoController,
         videoController: videoController,
         primaryColor: primaryColor,
         secondaryColor: secondaryColor,
+        playIconSize: playIconSize,
       ),
     ),
   )

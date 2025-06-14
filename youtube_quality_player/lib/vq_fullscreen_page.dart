@@ -6,10 +6,13 @@ class FullscreenVideoPlayer extends StatefulWidget {
   final VideoController videoController;
   final Color primaryColor;
   final Color secondaryColor;
+  final double playIconSize;
 
-  FullscreenVideoPlayer(
-      {required this.videoController,
+  const FullscreenVideoPlayer(
+      {super.key,
+      required this.videoController,
       required this.primaryColor,
+      required this.playIconSize,
       required this.secondaryColor});
 
   @override
@@ -36,7 +39,8 @@ class _FullscreenVideoPlayerState extends State<FullscreenVideoPlayer> {
               right: 60,
               child: IconButton(
                 icon: Icon(Icons.zoom_in,
-                    color: widget.primaryColor.withOpacity(0.5), size: 30),
+                    color: widget.primaryColor.withValues(alpha: 0.5),
+                    size: 30),
                 onPressed: () {
                   _zoomIn();
                 },
@@ -48,7 +52,7 @@ class _FullscreenVideoPlayerState extends State<FullscreenVideoPlayer> {
               child: IconButton(
                 icon: Icon(
                   Icons.zoom_out,
-                  color: widget.primaryColor.withOpacity(0.5),
+                  color: widget.primaryColor.withValues(alpha: 0.5),
                   size: 30,
                 ),
                 onPressed: () {
@@ -139,7 +143,7 @@ class _FullscreenVideoPlayerState extends State<FullscreenVideoPlayer> {
       buttonBarButtonSize: 30.0,
       buttonBarButtonColor: Colors.white,
       primaryButtonBar: [
-        MaterialPlayOrPauseButton(iconSize: 48.0),
+        MaterialPlayOrPauseButton(iconSize: widget.playIconSize),
       ],
       bottomButtonBar: [
         IconButton(

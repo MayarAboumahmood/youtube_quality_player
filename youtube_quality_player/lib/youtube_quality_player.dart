@@ -33,12 +33,20 @@ class YQPlayer extends StatefulWidget {
   /// If not specified, it defaults English.
   final Locale locale;
 
+  /// if set true then the video will automatically play when initial, false will not, default true
+  final bool shouldAutoPlay;
+
+  /// control the size of the play icon size to prevent it's placed where it should not.
+  final double playIconSize;
+
   const YQPlayer({
     super.key,
     required this.videoLink,
     this.primaryColor = Colors.green,
     this.secondaryColor = Colors.greenAccent,
     this.locale = const Locale('en'), // Default to English
+    this.shouldAutoPlay = true, // Default to English
+    this.playIconSize = 48, // Default to English
   });
 
   @override
@@ -143,7 +151,9 @@ class YQPlayerState extends State<YQPlayer> {
     AudioOnlyStreamInfo? newAudio = getClosestAudioStream();
     Duration? cPosition = await videoPlayer.stream.position.first;
     await videoPlayer
-        .open(media_kit.Media(selectedQuality!.url.toString(), start: cPosition))
+        .open(
+            play: widget.shouldAutoPlay,
+            media_kit.Media(selectedQuality!.url.toString(), start: cPosition))
         .then((_) async {
       await Future.delayed(const Duration(milliseconds: 500));
       if (newAudio != null) {
@@ -186,21 +196,28 @@ class YQPlayerState extends State<YQPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: fetchingVideoQualitiesLoading
-          ? Container(
-              color: Colors.black,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width * 9 / 16,
-              child: const Center(
-                  child: CircularProgressIndicator(
-                color: Colors.white,
-              )))
-          : media_kit_video.MaterialVideoControlsTheme(
-              normal: buildMaterialVideoControlsNormalThemeData(context),
-              fullscreen: buildMaterialVideoControlsFullScreenThemeData(),
-              child: media_kit_video.Video(
-                  controller: videoController, fit: BoxFit.contain)),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          videoPlayer.stop();
+        }
+      },
+      child: Scaffold(
+        body: fetchingVideoQualitiesLoading
+            ? Container(
+                color: Colors.black,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width * 9 / 16,
+                child: const Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.white,
+                )))
+            : media_kit_video.MaterialVideoControlsTheme(
+                normal: buildMaterialVideoControlsNormalThemeData(context),
+                fullscreen: buildMaterialVideoControlsFullScreenThemeData(),
+                child: media_kit_video.Video(
+                    controller: videoController, fit: BoxFit.contain)),
+      ),
     );
   }
 
@@ -223,14 +240,20 @@ class YQPlayerState extends State<YQPlayer> {
       seekBarThumbColor: widget.primaryColor!,
       // Modify theme options:
       buttonBarButtonSize: 24.0,
+
       buttonBarButtonColor: Colors.white,
       primaryButtonBar: [
-        const media_kit_video.MaterialPlayOrPauseButton(iconSize: 48.0),
+        media_kit_video.MaterialPlayOrPauseButton(
+            iconSize: widget.playIconSize),
       ],
       bottomButtonBar: [
         IconButton(
-          onPressed: () => customToggleFullscreen(context, videoController,
-              widget.primaryColor!, widget.secondaryColor!),
+          onPressed: () => customToggleFullscreen(
+              context,
+              videoController,
+              widget.primaryColor!,
+              widget.secondaryColor!,
+              widget.playIconSize),
           icon: (media_kit_video.isFullscreen(context)
               ? const Icon(Icons.fullscreen_exit)
               : const Icon(Icons.fullscreen)),
