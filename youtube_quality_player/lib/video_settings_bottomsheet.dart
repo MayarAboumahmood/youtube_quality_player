@@ -10,7 +10,7 @@ class SettingsSheet extends StatelessWidget {
   final Color primaryColor;
   final Locale locale;
 
-  SettingsSheet({
+  const SettingsSheet({super.key,
     required this.videoQualities,
     required this.onChangeQuality,
     required this.onChangeSpeed,

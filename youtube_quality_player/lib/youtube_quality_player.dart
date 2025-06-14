@@ -131,15 +131,21 @@ class YQPlayerState extends State<YQPlayer> {
     }
   }
 
+  bool videoInitializationFailed = false;
+
   void initialiseVideoPlayer() async {
-    if (selectedQuality != null) {
-      await videoPlayer
-          .open(media_kit.Media(selectedQuality!.url.toString()))
-          .then((_) async {
-        await Future.delayed(const Duration(milliseconds: 500));
-        videoPlayer.setAudioTrack(
-            media_kit.AudioTrack.uri(getClosestAudioStream()!.url.toString()));
-      });
+    try {
+      if (selectedQuality != null) {
+        await videoPlayer
+            .open(media_kit.Media(selectedQuality!.url.toString()))
+            .then((_) async {
+          await Future.delayed(const Duration(milliseconds: 500));
+          videoPlayer.setAudioTrack(media_kit.AudioTrack.uri(
+              getClosestAudioStream()!.url.toString()));
+        });
+      }
+    } catch (_) {
+      videoInitializationFailed = false;
     }
   }
 
@@ -212,11 +218,25 @@ class YQPlayerState extends State<YQPlayer> {
                     child: CircularProgressIndicator(
                   color: Colors.white,
                 )))
-            : media_kit_video.MaterialVideoControlsTheme(
-                normal: buildMaterialVideoControlsNormalThemeData(context),
-                fullscreen: buildMaterialVideoControlsFullScreenThemeData(),
-                child: media_kit_video.Video(
-                    controller: videoController, fit: BoxFit.contain)),
+            : videoInitializationFailed
+                ? Container(
+                    color: Colors.black,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width * 9 / 16,
+                    child: Center(
+                      child: Text(
+                        widget.locale.languageCode == 'ar'
+                            ? 'لم يتم تحميل الفيديو. يُرجى المحاولة لاحقًا.'
+                            : 'Video failed to load. Please try again later.',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  )
+                : media_kit_video.MaterialVideoControlsTheme(
+                    normal: buildMaterialVideoControlsNormalThemeData(context),
+                    fullscreen: buildMaterialVideoControlsFullScreenThemeData(),
+                    child: media_kit_video.Video(
+                        controller: videoController, fit: BoxFit.contain)),
       ),
     );
   }
