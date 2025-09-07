@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_quality_player/initialized_function.dart';
 import 'package:youtube_quality_player/youtube_quality_player.dart';
 
 void main() {

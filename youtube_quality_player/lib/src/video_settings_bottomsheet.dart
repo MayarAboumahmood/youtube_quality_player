@@ -1,3 +1,6 @@
+/// Bottom sheet widget for video settings (quality, speed, etc.).
+library;
+
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +13,8 @@ class SettingsSheet extends StatelessWidget {
   final Color primaryColor;
   final Locale locale;
 
-  const SettingsSheet({super.key,
+  const SettingsSheet({
+    super.key,
     required this.videoQualities,
     required this.onChangeQuality,
     required this.onChangeSpeed,
@@ -25,14 +29,14 @@ class SettingsSheet extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          buildQualityChangeListTile(context),
-          buildChangeSpeedListTile(context),
+          _buildQualityChangeListTile(context),
+          _buildChangeSpeedListTile(context),
         ],
       ),
     );
   }
 
-  ListTile buildChangeSpeedListTile(BuildContext context) {
+  ListTile _buildChangeSpeedListTile(BuildContext context) {
     final text = locale.languageCode == 'ar' ? 'سرعة الفيديو' : 'Video Speed';
 
     return ListTile(
@@ -56,7 +60,7 @@ class SettingsSheet extends StatelessWidget {
     );
   }
 
-  ListTile buildQualityChangeListTile(BuildContext context) {
+  ListTile _buildQualityChangeListTile(BuildContext context) {
     final text = locale.languageCode == 'ar' ? 'جودة الفيديو' : 'Video Quality';
 
     return ListTile(
@@ -109,7 +113,7 @@ class QualitySelectionSheet extends StatelessWidget {
             },
             child: Container(
               color: selectedQuality == quality
-                  ? primaryColor.withOpacity(0.3)
+                  ? primaryColor.withValues(alpha: 0.3)
                   : Colors.transparent,
               child: ListTile(
                 title: Text('${quality.videoResolution.height}p',
@@ -129,7 +133,7 @@ class SpeedSelectionSheet extends StatelessWidget {
   final double currentSpeed;
 
   SpeedSelectionSheet(
-      {required this.onChangeSpeed, required this.currentSpeed});
+      {super.key, required this.onChangeSpeed, required this.currentSpeed});
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +147,7 @@ class SpeedSelectionSheet extends StatelessWidget {
             },
             child: Container(
               color: currentSpeed == speed
-                  ? Colors.blue.withOpacity(0.3)
+                  ? Colors.blue.withValues(alpha: 0.3)
                   : Colors.transparent,
               child: ListTile(
                 title: Text('x$speed',

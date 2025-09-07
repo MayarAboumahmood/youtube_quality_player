@@ -1,6 +1,6 @@
 name: youtube_quality_player
 description: A Flutter YouTube player package that supports multiple video qualities, multi speeds, and more.
-version: 1.1.2
+version: 1.1.3
 #author: mayar aboumahmood <abmayar208@gmail.com>
 homepage: https://github.com/MayarAboumahmood/youtube_quality_player.git
 

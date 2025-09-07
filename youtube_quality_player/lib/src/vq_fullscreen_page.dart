@@ -1,3 +1,6 @@
+/// The full screen page that you will enter
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -33,7 +36,7 @@ class _FullscreenVideoPlayerState extends State<FullscreenVideoPlayer> {
         textDirection: TextDirection.ltr,
         child: Stack(
           children: [
-            buildVideoFullWidget(context),
+            _buildVideoFullWidget(context),
             Positioned(
               top: 20,
               right: 60,
@@ -110,12 +113,12 @@ class _FullscreenVideoPlayerState extends State<FullscreenVideoPlayer> {
     );
   }
 
-  Center buildVideoFullWidget(BuildContext context) {
+  Center _buildVideoFullWidget(BuildContext context) {
     return Center(
       child: AspectRatio(
         aspectRatio: 16 / 9,
         child: MaterialVideoControlsTheme(
-            normal: buildNormalMaterialVideoControlsThemeData(context),
+            normal: _buildNormalMaterialVideoControlsThemeData(context),
             fullscreen: MaterialVideoControlsThemeData(),
             child: InteractiveViewer(
               transformationController: transformationController,
@@ -132,7 +135,7 @@ class _FullscreenVideoPlayerState extends State<FullscreenVideoPlayer> {
     );
   }
 
-  MaterialVideoControlsThemeData buildNormalMaterialVideoControlsThemeData(
+  MaterialVideoControlsThemeData _buildNormalMaterialVideoControlsThemeData(
       BuildContext context) {
     return MaterialVideoControlsThemeData(
       seekOnDoubleTap: true,

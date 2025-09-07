@@ -1,14 +1,22 @@
-library youtube_quality_player;
+/// Youtube Quality Player
+///
+/// A Flutter package that allows you to play YouTube videos with quality selection,
+/// fullscreen support, and customizable controls.
+library;
+
+export 'package:youtube_quality_player/youtube_quality_player.dart';
+export '/initialized_function.dart';
 
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:media_kit/media_kit.dart' as media_kit;
 import 'package:media_kit_video/media_kit_video.dart' as media_kit_video;
-import 'package:youtube_quality_player/video_settings_bottomsheet.dart';
+import 'package:youtube_quality_player/src/video_settings_bottomsheet.dart';
 
-import 'fullscreen_functions.dart';
+import 'src/fullscreen_functions.dart';
 
+/// A widget that plays YouTube videos with selectable quality options.
 class YQPlayer extends StatefulWidget {
   /// The YouTube video link to be played.
   ///
@@ -94,11 +102,11 @@ class YQPlayerState extends State<YQPlayer> {
 
       if (manifest.videoOnly.isNotEmpty && manifest.audioOnly.isNotEmpty) {
         audioOnlyStreamInfo = manifest.audioOnly;
-        assignVideoQualities(manifest.videoOnly);
+        _assignVideoQualities(manifest.videoOnly);
         setState(() {
           selectedQuality = videoQualities[(videoQualities.length ~/ 2)];
         });
-        initialiseVideoPlayer();
+        _initialiseVideoPlayer();
       }
       videoController = media_kit_video.VideoController(videoPlayer);
 
@@ -113,7 +121,7 @@ class YQPlayerState extends State<YQPlayer> {
     }
   }
 
-  void assignVideoQualities(List<VideoStreamInfo> videoInfos) {
+  void _assignVideoQualities(List<VideoStreamInfo> videoInfos) {
     for (VideoStreamInfo i in videoInfos) {
       if (i.codec.toString().contains('mp4')) {
         bool shouldAdd = true;
@@ -133,7 +141,7 @@ class YQPlayerState extends State<YQPlayer> {
 
   bool videoInitializationFailed = false;
 
-  void initialiseVideoPlayer() async {
+  void _initialiseVideoPlayer() async {
     try {
       if (selectedQuality != null) {
         await videoPlayer
@@ -142,7 +150,7 @@ class YQPlayerState extends State<YQPlayer> {
             .then((_) async {
           await Future.delayed(const Duration(milliseconds: 500));
           videoPlayer.setAudioTrack(media_kit.AudioTrack.uri(
-              getClosestAudioStream()!.url.toString()));
+              _getClosestAudioStream()!.url.toString()));
           // videoController = media_kit_video.VideoController(videoPlayer);
         });
       }
@@ -151,12 +159,12 @@ class YQPlayerState extends State<YQPlayer> {
     }
   }
 
-  void changeVideoQuality(VideoStreamInfo newQuality) async {
+  void _changeVideoQuality(VideoStreamInfo newQuality) async {
     setState(() {
       selectedQuality = newQuality;
     });
 
-    AudioOnlyStreamInfo? newAudio = getClosestAudioStream();
+    AudioOnlyStreamInfo? newAudio = _getClosestAudioStream();
     Duration? cPosition = await videoPlayer.stream.position.first;
     await videoPlayer
         .open(
@@ -174,7 +182,7 @@ class YQPlayerState extends State<YQPlayer> {
     });
   }
 
-  AudioOnlyStreamInfo? getClosestAudioStream() {
+  AudioOnlyStreamInfo? _getClosestAudioStream() {
     if (audioOnlyStreamInfo.isEmpty || selectedQuality == null) {
       return null;
     }
@@ -234,8 +242,9 @@ class YQPlayerState extends State<YQPlayer> {
                     ),
                   )
                 : media_kit_video.MaterialVideoControlsTheme(
-                    normal: buildMaterialVideoControlsNormalThemeData(context),
-                    fullscreen: buildMaterialVideoControlsFullScreenThemeData(),
+                    normal: _buildMaterialVideoControlsNormalThemeData(context),
+                    fullscreen:
+                        _buildMaterialVideoControlsFullScreenThemeData(),
                     child: media_kit_video.Video(
                         controller: videoController, fit: BoxFit.contain)),
       ),
@@ -243,7 +252,7 @@ class YQPlayerState extends State<YQPlayer> {
   }
 
   media_kit_video.MaterialVideoControlsThemeData
-      buildMaterialVideoControlsFullScreenThemeData() {
+      _buildMaterialVideoControlsFullScreenThemeData() {
     return const media_kit_video.MaterialVideoControlsThemeData(
       // Modify theme options:
       displaySeekBar: false,
@@ -253,7 +262,9 @@ class YQPlayerState extends State<YQPlayer> {
   }
 
   media_kit_video.MaterialVideoControlsThemeData
-      buildMaterialVideoControlsNormalThemeData(BuildContext context) {
+      _buildMaterialVideoControlsNormalThemeData(BuildContext context) {
+    FullscreenHelper fullscreenHelper = FullscreenHelper();
+
     return media_kit_video.MaterialVideoControlsThemeData(
       padding: const EdgeInsets.symmetric(vertical: 10),
       // seekBarBufferColor: Colors.green,
@@ -269,7 +280,7 @@ class YQPlayerState extends State<YQPlayer> {
       ],
       bottomButtonBar: [
         IconButton(
-          onPressed: () => customToggleFullscreen(
+          onPressed: () => fullscreenHelper.customToggleFullscreen(
               context,
               videoController,
               widget.primaryColor!,
@@ -295,9 +306,7 @@ class YQPlayerState extends State<YQPlayer> {
                   videoQualities: videoQualities,
                   currentSpeed: currentSpeed,
                   onChangeQuality: (newSelected) {
-                    changeVideoQuality(
-                      newSelected
-                    );
+                    _changeVideoQuality(newSelected);
                   },
                   selectedQuality: selectedQuality,
                   primaryColor: widget.primaryColor!,

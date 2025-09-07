@@ -1,4 +1,6 @@
-library youtube_quality_player;
+/// Provides helper functions to initialize the Youtube Quality Player.
+library;
+
 import 'package:media_kit/media_kit.dart';
 
 /// Ensures that MediaKit is properly initialized.
