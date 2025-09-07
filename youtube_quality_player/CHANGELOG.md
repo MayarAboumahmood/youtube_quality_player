@@ -1,3 +1,3 @@
 ## 1.1.1
 
-- showing error message when the video field to play.
+- adding an example and updating the depending packages.
