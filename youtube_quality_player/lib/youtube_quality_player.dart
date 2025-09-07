@@ -137,11 +137,13 @@ class YQPlayerState extends State<YQPlayer> {
     try {
       if (selectedQuality != null) {
         await videoPlayer
-            .open(media_kit.Media(selectedQuality!.url.toString()))
+            .open(media_kit.Media(selectedQuality!.url.toString()),
+                play: widget.shouldAutoPlay)
             .then((_) async {
           await Future.delayed(const Duration(milliseconds: 500));
           videoPlayer.setAudioTrack(media_kit.AudioTrack.uri(
               getClosestAudioStream()!.url.toString()));
+          // videoController = media_kit_video.VideoController(videoPlayer);
         });
       }
     } catch (_) {
@@ -158,7 +160,6 @@ class YQPlayerState extends State<YQPlayer> {
     Duration? cPosition = await videoPlayer.stream.position.first;
     await videoPlayer
         .open(
-            play: widget.shouldAutoPlay,
             media_kit.Media(selectedQuality!.url.toString(), start: cPosition))
         .then((_) async {
       await Future.delayed(const Duration(milliseconds: 500));
@@ -294,7 +295,9 @@ class YQPlayerState extends State<YQPlayer> {
                   videoQualities: videoQualities,
                   currentSpeed: currentSpeed,
                   onChangeQuality: (newSelected) {
-                    changeVideoQuality(newSelected);
+                    changeVideoQuality(
+                      newSelected
+                    );
                   },
                   selectedQuality: selectedQuality,
                   primaryColor: widget.primaryColor!,
